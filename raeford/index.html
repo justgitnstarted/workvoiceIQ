@@ -1,11 +1,266 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta name="robots" content="noindex">
-  <title>Temporarily Unavailable</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Message For You</title>
+<style>
+  :root{
+    --red:#8C1515; --red-d:#6B0F0F; --red-lt:#F5ECEC;
+    --gold:#C8A45A; --bg:#FAFAF8; --white:#FFFFFF;
+    --text:#1A1A1A; --muted:#5C5450; --border:#DDD9D4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:var(--bg); color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* Header */
+  header{
+    background:var(--red); border-bottom:4px solid var(--gold);
+    padding:18px 20px 16px; text-align:center;
+  }
+  header h1{
+    font-family:Georgia,'Times New Roman',serif;
+    color:#fff; font-size:clamp(1.4rem,5.5vw,1.9rem); font-weight:700;
+  }
+  header p{ color:#F3D9D9; font-size:.95rem; margin-top:4px; }
+
+  /* Language switch */
+  .lang-bar{
+    display:flex; gap:0; justify-content:center;
+    background:var(--white); border-bottom:1px solid var(--border);
+    padding:10px; position:sticky; top:0; z-index:5;
+  }
+  .lang-btn{
+    flex:1; max-width:200px; padding:14px 10px; font-size:1.05rem; font-weight:700;
+    border:2px solid var(--red); background:var(--white); color:var(--red);
+    cursor:pointer;
+  }
+  .lang-btn:first-child{ border-radius:10px 0 0 10px; border-right-width:1px; }
+  .lang-btn:last-child{ border-radius:0 10px 10px 0; border-left-width:1px; }
+  .lang-btn.active{ background:var(--red); color:#fff; }
+
+  /* Cards */
+  main{ max-width:560px; margin:0 auto; padding:18px 16px 40px; }
+  .card{
+    background:var(--white); border:1px solid var(--border);
+    border-radius:16px; padding:22px 20px; margin-bottom:20px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);
+  }
+  .person{ display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .avatar{
+    width:64px; height:64px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:700; font-size:1.4rem;
+    font-family:Georgia,serif; border:3px solid var(--gold);
+  }
+  .name{ font-size:1.3rem; font-weight:700; color:var(--text); line-height:1.1; }
+  .sub{ font-size:.9rem; color:var(--muted); margin-top:3px; }
+
+  /* Big play / listen button */
+  .listen-btn{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:12px;
+    padding:18px; font-size:1.25rem; font-weight:700; color:#fff;
+    background:var(--red); border:none; border-radius:12px; cursor:pointer;
+    margin-bottom:16px;
+  }
+  .listen-btn:active{ background:var(--red-d); }
+  .listen-btn.readaloud{ background:var(--gold); color:#1A1A1A; }
+  .listen-btn .icon{
+    width:34px; height:34px; border-radius:50%;
+    background:rgba(255,255,255,.22); display:flex; align-items:center; justify-content:center;
+  }
+  .listen-btn.readaloud .icon{ background:rgba(0,0,0,.12); }
+  .listen-btn.playing{ outline:3px solid var(--gold); outline-offset:2px; }
+
+  /* Testimony text */
+  .testimony{
+    font-size:1.12rem; line-height:1.65; color:#2A2522; white-space:pre-line;
+  }
+  .placeholder{
+    background:#FFF7E6; border:1px dashed var(--gold); border-radius:10px;
+    padding:14px; font-size:1rem; color:var(--muted);
+  }
+
+  footer{
+    text-align:center; padding:24px 20px 40px; color:var(--muted); font-size:.82rem;
+  }
+</style>
 </head>
 <body>
-  <h1>This page is temporarily unavailable.</h1>
-  <p>We are currently updating this page. Please check back soon.</p>
+
+  <header>
+    <h1 id="h-title">A Message For You</h1>
+    <p id="h-sub">From people who work here</p>
+  </header>
+
+  <div class="lang-bar">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">English</button>
+    <button class="lang-btn" id="btn-es" onclick="setLang('es')">Español</button>
+  </div>
+
+  <main id="cards"></main>
+
+  <footer id="foot">
+    <!-- Any required disclosure / sponsor line goes here. Have labor counsel confirm
+         wording before this page goes live. -->
+  </footer>
+
+<script>
+  /* ============================================================
+     EDIT PEOPLE HERE. To add a real recording, set audio to the
+     filename inside the /audio folder, e.g. audio: "audio/eduardo.mp3"
+     For someone with no recording, set audio to null (gets a Read-aloud
+     button using the phone's built-in voice).
+     ============================================================ */
+  const people = [
+    {
+      id:"mika",
+      name:"Semika (Mika) Lawson",
+      initials:"ML",
+      color:"#8C1515",
+      audio:null,                          // no recording yet
+      sub_en:"21 years at the plant",
+      sub_es:"21 años en la planta",
+      text_en:`Where do I start... it's so much I can say with being in this chicken field for 21 yrs. This job has taught me a lot of things along the way. I started nights, moved to days, and jumped line to lines I knew nothing about. It was a lot, still I stood. House of Raeford came and a lot of people left. If I would had left I would not have got the chance to experience visiting another plant, running three optics, being able to stand and see what I have going on in my process. I'm thankful they gave us a chance because the doors could have been closed when Tyson left. I see that I used my own voice & never need anyone to speak for me. I totally feel as though the best is yet to come.`,
+      text_es:`¿Por dónde empiezo? Hay tanto que puedo decir después de 21 años en este campo del pollo. Este trabajo me ha enseñado muchas cosas en el camino. Empecé en las noches, pasé a los días y cambié de una línea a otra sin saber nada. Fue mucho, pero aun así me mantuve firme. Llegó House of Raeford y mucha gente se fue. Si yo me hubiera ido, no habría tenido la oportunidad de visitar otra planta, de manejar tres máquinas ópticas, de poder pararme y ver todo lo que tengo en mi proceso. Estoy agradecida de que nos dieran una oportunidad, porque las puertas se pudieron haber cerrado cuando Tyson se fue. Veo que usé mi propia voz y nunca necesité que nadie hablara por mí. De verdad siento que lo mejor está por venir.`
+    },
+    {
+      id:"daniel",
+      name:"Daniel",
+      initials:"D",
+      color:"#1F6F54",
+      audio:"audio/daniel.mp3",
+      sub_en:"Former chief steward, Greenville plant",
+      sub_es:"Ex delegado principal, planta de Greenville",
+      text_en:`When I needed the union, they were never there for me, and I was the chief steward at the Greenville plant. Raeford isn't a company I work for; it's a family I work with. This union, UFCW Local 1996 isn't it.`,
+      text_es:`Cuando necesité al sindicato, nunca estuvieron ahí para mí, y yo era el delegado principal en la planta de Greenville. Raeford no es una empresa para la que trabajo; es una familia con la que trabajo. Este sindicato, UFCW Local 1996, no es la respuesta.`
+    },
+    {
+      id:"eduardo",
+      name:"Eduardo",
+      initials:"E",
+      color:"#2D5A88",
+      audio:"audio/eduardo.mp3",
+      sub_en:"Vienna plant",
+      sub_es:"Planta de Vienna",
+      text_en:`I feel more comfortable working here in Vienna than in Greenville. Here, Raeford is investing in a future. I would rather give the company time to grow and see how they create a lot of opportunity for a lot of people. I don't want a union.`,
+      text_es:`Me siento más cómodo trabajando aquí en Vienna que en Greenville. Aquí Raeford está invirtiendo para un futuro. Prefiero darle a la compañía tiempo para que se desarrolle y ver cómo crean mucha oportunidad para mucha gente. Yo no quiero una unión.`
+    }
+  ];
+
+  /* ---- UI strings ---- */
+  const ui = {
+    en:{ title:"A Message For You", sub:"From people who work here",
+         play:"Play", read:"Read aloud", stop:"Stop" },
+    es:{ title:"Un Mensaje Para Ti", sub:"De personas que trabajan aquí",
+         play:"Escuchar", read:"Leer en voz alta", stop:"Detener" }
+  };
+
+  let lang = "en";
+  let speaking = false;
+
+  const playIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>';
+  const stopIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+  const spkIcon  = '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z"/></svg>';
+
+  function render(){
+    const root = document.getElementById("cards");
+    root.innerHTML = "";
+    people.forEach(p=>{
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const sub = lang==="en" ? p.sub_en : p.sub_es;
+      const subHtml = sub ? `<div class="sub">${sub}</div>` : "";
+
+      // button
+      let btnHtml;
+      if(p.audio){
+        btnHtml = `<button class="listen-btn" id="btn-${p.id}" onclick="playAudio('${p.id}')">
+            <span class="icon">${playIcon}</span><span class="label">${ui[lang].play}</span>
+          </button>
+          <audio id="aud-${p.id}" src="${p.audio}" preload="none"></audio>`;
+      } else {
+        btnHtml = `<button class="listen-btn readaloud" id="btn-${p.id}" onclick="readAloud('${p.id}')">
+            <span class="icon">${spkIcon}</span><span class="label">${ui[lang].read}</span>
+          </button>`;
+      }
+
+      const body = p.placeholder
+        ? `<div class="placeholder">${lang==="en"?p.text_en:p.text_es}</div>`
+        : `<div class="testimony">${lang==="en"?p.text_en:p.text_es}</div>`;
+
+      card.innerHTML = `
+        <div class="person">
+          <div class="avatar" style="background:${p.color}">${p.initials}</div>
+          <div><div class="name">${p.name}</div>${subHtml}</div>
+        </div>
+        ${btnHtml}
+        ${body}`;
+      root.appendChild(card);
+    });
+  }
+
+  function setLang(l){
+    lang = l;
+    document.getElementById("btn-en").classList.toggle("active", l==="en");
+    document.getElementById("btn-es").classList.toggle("active", l==="es");
+    document.documentElement.lang = l;
+    document.getElementById("h-title").textContent = ui[l].title;
+    document.getElementById("h-sub").textContent = ui[l].sub;
+    stopAll();
+    render();
+  }
+
+  function stopAll(){
+    document.querySelectorAll("audio").forEach(a=>{ a.pause(); a.currentTime=0; });
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    speaking = false;
+    document.querySelectorAll(".listen-btn").forEach(b=>{
+      b.classList.remove("playing");
+      const lbl = b.querySelector(".label");
+      const ico = b.querySelector(".icon");
+      if(b.classList.contains("readaloud")){ lbl.textContent = ui[lang].read; ico.innerHTML = spkIcon; }
+      else { lbl.textContent = ui[lang].play; ico.innerHTML = playIcon; }
+    });
+  }
+
+  function playAudio(id){
+    const aud = document.getElementById("aud-"+id);
+    const btn = document.getElementById("btn-"+id);
+    const wasPlaying = !aud.paused;
+    stopAll();
+    if(!wasPlaying){
+      aud.play().catch(()=>{});
+      btn.classList.add("playing");
+      btn.querySelector(".label").textContent = ui[lang].stop;
+      btn.querySelector(".icon").innerHTML = stopIcon;
+      aud.onended = ()=>stopAll();
+    }
+  }
+
+  function readAloud(id){
+    const p = people.find(x=>x.id===id);
+    const btn = document.getElementById("btn-"+id);
+    if(speaking){ stopAll(); return; }
+    if(!window.speechSynthesis){ return; }
+    stopAll();
+    const u = new SpeechSynthesisUtterance(lang==="en"?p.text_en:p.text_es);
+    u.lang = lang==="en" ? "en-US" : "es-ES";
+    u.rate = 0.95;
+    u.onend = ()=>stopAll();
+    speaking = true;
+    btn.classList.add("playing");
+    btn.querySelector(".label").textContent = ui[lang].stop;
+    btn.querySelector(".icon").innerHTML = stopIcon;
+    window.speechSynthesis.speak(u);
+  }
+
+  render();
+</script>
 </body>
 </html>
