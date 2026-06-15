@@ -64,17 +64,17 @@
   .notice {
     background: var(--notice-bg);
     border: 1px solid var(--line);
-    border-left: 6px solid var(--accent);
+    border-left: 4px solid var(--accent);
     border-radius: 6px;
-    padding: 22px 24px;
-    margin: 28px 0;
+    padding: 14px 16px;
+    margin: 18px 0;
   }
   .notice .label {
-    font-family: "IBM Plex Mono", monospace; font-size: 12px;
-    letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent);
-    margin-bottom: 8px;
+    font-family: "IBM Plex Mono", monospace; font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft);
+    margin-bottom: 6px;
   }
-  .notice p { margin: 0; font-size: 16.5px; }
+  .notice p { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
 
   section { padding: 26px 0; border-top: 1px solid var(--line); }
   h2 { font-size: 22px; margin: 0 0 12px; font-weight: 700; }
@@ -112,16 +112,15 @@
   .btn-stop { background: transparent; color: var(--ink); border: 1px solid var(--line); }
   .btn-read:focus-visible, .btn-stop:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-  .notice-listen { margin-bottom: 16px; }
+  .notice-listen { display: flex; gap: 8px; margin-bottom: 12px; }
   .btn-listen {
-    font: inherit; font-weight: 700; font-size: 18px; cursor: pointer;
+    font: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
     background: var(--accent); color: #fff; border: none;
-    border-radius: 10px; padding: 15px 20px; width: 100%;
-    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    border-radius: 999px; padding: 10px 18px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   }
-  .btn-listen::before { content: "\25B6"; font-size: 14px; }
+  .btn-listen::before { content: "\25B6"; font-size: 12px; }
   .btn-listen:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
-  #disc-stop { margin-top: 8px; }
 
   [hidden] { display: none !important; }
 
@@ -152,15 +151,11 @@
       <p class="lede" data-k="lede"></p>
     </header>
 
-    <!-- SOURCE DISCLOSURE: kept at the top, before any content, on purpose. -->
-    <div class="notice" role="note">
-      <div class="notice-listen">
-        <button type="button" id="disc-listen" class="btn-listen"></button>
-        <button type="button" id="disc-stop" class="btn-stop"></button>
-      </div>
-      <div class="label" data-k="noticeLabel"></div>
-      <p data-k="notice"></p>
-    </div>
+    <section>
+      <h2 data-k="testiHeading"></h2>
+      <p data-k="testiFraming"></p>
+      <div id="testi-cards" class="testi-cards"></div>
+    </section>
 
     <section>
       <h2 data-k="positionHeading"></h2>
@@ -172,11 +167,15 @@
       <p data-k="vote"></p>
     </div>
 
-    <section>
-      <h2 data-k="testiHeading"></h2>
-      <p data-k="testiFraming"></p>
-      <div id="testi-cards" class="testi-cards"></div>
-    </section>
+    <!-- SOURCE DISCLOSURE: moved to the bottom at the team's request. Source stays disclosed. -->
+    <div class="notice" role="note">
+      <div class="notice-listen">
+        <button type="button" id="disc-listen" class="btn-listen"></button>
+        <button type="button" id="disc-stop" class="btn-stop"></button>
+      </div>
+      <div class="label" data-k="noticeLabel"></div>
+      <p data-k="notice"></p>
+    </div>
 
     <footer>
       <p data-k="footer"></p>
@@ -192,7 +191,7 @@
       title: "Your vote. Your decision.",
       lede: "Information to help you decide before the election.",
       noticeLabel: "Notice about this page",
-      notice: "This page is published by WorkVoiceIQ, a workplace communications resource produced for Raeford Farms by its outside labor relations advisor. It is not independent of the company. Any clips and excerpts posted here are individual employees speaking in their own words, shared with their consent. Their views are their own, not statements by Raeford Farms.",
+      notice: "This page is published by WorkVoiceIQ, a workplace communications resource produced for Raeford Farms by its outside labor relations advisor. Any clips and excerpts posted here are individual employees speaking in their own words, shared with their consent. Their views are their own, not statements by Raeford Farms.",
       noticeSpoken: "Quick note before you listen. This page was made for Raeford Farms by a company that Raeford hired. It is not neutral. The workers you will hear are giving their own opinions. They are not speaking for everyone. Your vote is your own. You can vote yes, or you can vote no. Both are your right. Listen, ask questions, and make sure you vote.",
       positionHeading: "Raeford Farms' position",
       position: "We would rather work directly with our employees than bring a union in between us. We believe we can hear concerns and solve problems together, without an outside organization in the middle. That is our honest preference. The decision itself is yours. Voting for the union or against it is your right, and your choice is protected either way.",
@@ -208,7 +207,7 @@
       title: "Su voto. Su decisión.",
       lede: "Información para ayudarle a decidir antes de la elección.",
       noticeLabel: "Aviso sobre esta página",
-      notice: "Esta página es publicada por WorkVoiceIQ, un recurso de comunicación laboral producido para Raeford Farms por su asesor externo en relaciones laborales. No es independiente de la empresa. Los audios y fragmentos que aparezcan aquí corresponden a empleados que hablan con sus propias palabras, compartidos con su consentimiento. Las opiniones son suyas y no constituyen declaraciones de Raeford Farms.",
+      notice: "Esta página es publicada por WorkVoiceIQ, un recurso de comunicación laboral producido para Raeford Farms por su asesor externo en relaciones laborales. Los audios y fragmentos que aparezcan aquí corresponden a empleados que hablan con sus propias palabras, compartidos con su consentimiento. Las opiniones son suyas y no constituyen declaraciones de Raeford Farms.",
       noticeSpoken: "Una nota rápida antes de escuchar. Esta página la hizo para Raeford Farms una compañía que Raeford contrató. No es neutral. Los trabajadores que va a escuchar dan su propia opinión. No hablan por todos. Su voto es suyo. Puede votar sí, o puede votar no. Las dos son su derecho. Escuche, haga preguntas, y asegúrese de votar.",
       positionHeading: "Posición de Raeford Farms",
       position: "Preferimos trabajar directamente con nuestros empleados en lugar de tener un sindicato de por medio. Creemos que podemos escuchar las inquietudes y resolver los problemas juntos, sin una organización externa en medio. Esa es nuestra preferencia sincera. La decisión, sin embargo, es suya. Votar a favor o en contra del sindicato es su derecho, y su elección está protegida en cualquiera de los dos casos.",
@@ -224,7 +223,7 @@
       title: "Vòt ou. Desizyon ou.",
       lede: "Enfòmasyon pou ede w deside anvan eleksyon an.",
       noticeLabel: "Avi sou paj sa a",
-      notice: "Paj sa a pibliye pa WorkVoiceIQ, yon resous kominikasyon nan travay ki fèt pou Raeford Farms pa konseye ekstèn li nan relasyon travay. Li pa endepandan parapò ak konpayi an. Nenpòt odyo ak ekstrè ki sou paj la se anplwaye k ap pale ak pwòp pawòl pa yo, ki pataje ak konsantman yo. Opinyon yo se pa yo menm, yo pa deklarasyon Raeford Farms.",
+      notice: "Paj sa a pibliye pa WorkVoiceIQ, yon resous kominikasyon nan travay ki fèt pou Raeford Farms pa konseye ekstèn li nan relasyon travay. Nenpòt odyo ak ekstrè ki sou paj la se anplwaye k ap pale ak pwòp pawòl pa yo, ki pataje ak konsantman yo. Opinyon yo se pa yo menm, yo pa deklarasyon Raeford Farms.",
       noticeSpoken: "Yon ti nòt anvan ou koute. Yon konpayi Raeford Farms te anboche ki fè paj sa a. Li pa net. Travayè ou pral tande yo ap bay pwòp opinyon pa yo. Yo pa pale pou tout moun. Vòt ou se pa ou. Ou ka vote wi, oswa ou ka vote non. Toulède se dwa ou. Koute, poze kesyon, epi asire w ou vote.",
       positionHeading: "Pozisyon Raeford Farms",
       position: "Nou ta pito travay dirèkteman ak anplwaye nou yo olye nou mete yon sendika nan mitan nou. Nou kwè nou ka koute enkyetid yo epi rezoud pwoblèm yo ansanm, san yon òganizasyon deyò nan mitan. Sa se preferans onèt nou. Men, desizyon an se pou ou. Vote pou sendika a oswa kont li se dwa ou, epi chwa ou pwoteje kèlkeswa jan ou vote.",
