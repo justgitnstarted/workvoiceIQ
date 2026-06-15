@@ -112,6 +112,17 @@
   .btn-stop { background: transparent; color: var(--ink); border: 1px solid var(--line); }
   .btn-read:focus-visible, .btn-stop:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  .notice-listen { margin-bottom: 16px; }
+  .btn-listen {
+    font: inherit; font-weight: 700; font-size: 18px; cursor: pointer;
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 10px; padding: 15px 20px; width: 100%;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .btn-listen::before { content: "\25B6"; font-size: 14px; }
+  .btn-listen:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  #disc-stop { margin-top: 8px; }
+
   [hidden] { display: none !important; }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -143,6 +154,10 @@
 
     <!-- SOURCE DISCLOSURE: kept at the top, before any content, on purpose. -->
     <div class="notice" role="note">
+      <div class="notice-listen">
+        <button type="button" id="disc-listen" class="btn-listen"></button>
+        <button type="button" id="disc-stop" class="btn-stop"></button>
+      </div>
       <div class="label" data-k="noticeLabel"></div>
       <p data-k="notice"></p>
     </div>
@@ -178,6 +193,7 @@
       lede: "Information to help you decide before the election.",
       noticeLabel: "Notice about this page",
       notice: "This page is published by WorkVoiceIQ, a workplace communications resource produced for Raeford Farms by its outside labor relations advisor. It is not independent of the company. Any clips and excerpts posted here are individual employees speaking in their own words, shared with their consent. Their views are their own, not statements by Raeford Farms.",
+      noticeSpoken: "Quick note before you listen. This page was made for Raeford Farms by a company that Raeford hired. It is not neutral. The workers you will hear are giving their own opinions. They are not speaking for everyone. Your vote is your own. You can vote yes, or you can vote no. Both are your right. Listen, ask questions, and make sure you vote.",
       positionHeading: "Raeford Farms' position",
       position: "We would rather work directly with our employees than bring a union in between us. We believe we can hear concerns and solve problems together, without an outside organization in the middle. That is our honest preference. The decision itself is yours. Voting for the union or against it is your right, and your choice is protected either way.",
       voteHeading: "About voting",
@@ -193,6 +209,7 @@
       lede: "Información para ayudarle a decidir antes de la elección.",
       noticeLabel: "Aviso sobre esta página",
       notice: "Esta página es publicada por WorkVoiceIQ, un recurso de comunicación laboral producido para Raeford Farms por su asesor externo en relaciones laborales. No es independiente de la empresa. Los audios y fragmentos que aparezcan aquí corresponden a empleados que hablan con sus propias palabras, compartidos con su consentimiento. Las opiniones son suyas y no constituyen declaraciones de Raeford Farms.",
+      noticeSpoken: "Una nota rápida antes de escuchar. Esta página la hizo para Raeford Farms una compañía que Raeford contrató. No es neutral. Los trabajadores que va a escuchar dan su propia opinión. No hablan por todos. Su voto es suyo. Puede votar sí, o puede votar no. Las dos son su derecho. Escuche, haga preguntas, y asegúrese de votar.",
       positionHeading: "Posición de Raeford Farms",
       position: "Preferimos trabajar directamente con nuestros empleados en lugar de tener un sindicato de por medio. Creemos que podemos escuchar las inquietudes y resolver los problemas juntos, sin una organización externa en medio. Esa es nuestra preferencia sincera. La decisión, sin embargo, es suya. Votar a favor o en contra del sindicato es su derecho, y su elección está protegida en cualquiera de los dos casos.",
       voteHeading: "Sobre votar",
@@ -208,6 +225,7 @@
       lede: "Enfòmasyon pou ede w deside anvan eleksyon an.",
       noticeLabel: "Avi sou paj sa a",
       notice: "Paj sa a pibliye pa WorkVoiceIQ, yon resous kominikasyon nan travay ki fèt pou Raeford Farms pa konseye ekstèn li nan relasyon travay. Li pa endepandan parapò ak konpayi an. Nenpòt odyo ak ekstrè ki sou paj la se anplwaye k ap pale ak pwòp pawòl pa yo, ki pataje ak konsantman yo. Opinyon yo se pa yo menm, yo pa deklarasyon Raeford Farms.",
+      noticeSpoken: "Yon ti nòt anvan ou koute. Yon konpayi Raeford Farms te anboche ki fè paj sa a. Li pa net. Travayè ou pral tande yo ap bay pwòp opinyon pa yo. Yo pa pale pou tout moun. Vòt ou se pa ou. Ou ka vote wi, oswa ou ka vote non. Toulède se dwa ou. Koute, poze kesyon, epi asire w ou vote.",
       positionHeading: "Pozisyon Raeford Farms",
       position: "Nou ta pito travay dirèkteman ak anplwaye nou yo olye nou mete yon sendika nan mitan nou. Nou kwè nou ka koute enkyetid yo epi rezoud pwoblèm yo ansanm, san yon òganizasyon deyò nan mitan. Sa se preferans onèt nou. Men, desizyon an se pou ou. Vote pou sendika a oswa kont li se dwa ou, epi chwa ou pwoteje kèlkeswa jan ou vote.",
       voteHeading: "Sou vote",
@@ -266,10 +284,13 @@
 
   var tUI = {
     en: { listen: "Listen to %s in their own words:", read: "Read aloud", stop: "Stop",
+          discListen: "Listen to this page",
           readNote: "No recording yet. This reads the text above in a computer voice. It is not a recording of her." },
     es: { listen: "Escuche a %s en sus propias palabras:", read: "Leer en voz alta", stop: "Detener",
+          discListen: "Escuchar esta página",
           readNote: "Aún no hay grabación. Esto lee el texto de arriba con una voz de computadora. No es una grabación de ella." },
     ht: { listen: "Koute %s ak pwòp pawòl li:", read: "Li awotvwa", stop: "Sispann",
+          discListen: "Koute paj sa a",
           readNote: "Poko gen anrejistreman. Sa a li tèks anwo a ak yon vwa òdinatè. Se pa yon anrejistreman vwa li." }
   };
 
@@ -349,7 +370,10 @@
     });
   }
 
+  var currentLang = "en";
+
   function setLang(code) {
+    currentLang = code;
     var data = content[code] || content.en;
     document.documentElement.lang = data.lang;
     document.querySelectorAll("[data-k]").forEach(function (el) {
@@ -359,8 +383,25 @@
     document.querySelectorAll(".langs button").forEach(function (b) {
       b.setAttribute("aria-pressed", b.getAttribute("data-lang") === code ? "true" : "false");
     });
+    var dl = document.getElementById("disc-listen");
+    var ds = document.getElementById("disc-stop");
+    if (dl) dl.textContent = tUI[code].discListen;
+    if (ds) ds.textContent = tUI[code].stop;
     renderTestimonials(code);
   }
+
+  document.getElementById("disc-listen").addEventListener("click", function () {
+    try {
+      if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); return; }
+      stopAllAudio();
+      var u = new SpeechSynthesisUtterance(content[currentLang].noticeSpoken);
+      u.lang = currentLang === "es" ? "es-ES" : (currentLang === "ht" ? "fr-FR" : "en-US");
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  });
+  document.getElementById("disc-stop").addEventListener("click", function () {
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+  });
 
   document.querySelectorAll(".langs button").forEach(function (b) {
     b.addEventListener("click", function () { setLang(b.getAttribute("data-lang")); });
